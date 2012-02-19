@@ -69,7 +69,7 @@ export CLOCK_PERIOD = 50	# TODO: You will want to make this more aggresive
 ################################################################################
 
 # Default target:
-all:    simv
+all:    sim
 
 .PHONY: all
 
