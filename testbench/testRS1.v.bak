@@ -1,0 +1,109 @@
+module testRS1;
+
+   reg [4:0]  rs1_dest_in;    // The destination of this instruction 
+   reg [63:0] rs1_cdb_in;     // CDB bus from functional units 
+   reg [4:0] 	rs1_cdb_tag;    // CDB tag bus from functional units 
+   reg        rs1_cdb_valid;  // The data on the CDB is valid 
+   reg [63:0] rs1_opa_in;     // Operand a from Rename  
+   reg [63:0] rs1_opb_in;     // Operand a from Rename 
+   reg        rs1_opa_valid;  // Is Opa a Tag or immediate data (READ THIS COMMENT) 
+   reg        rs1_opb_valid;  // Is Opb a tag or immediate data (READ THIS COMMENT) 
+   reg        rs1_load_in;    // Signal from rename to flop opa/b 
+   reg        rs1_use_enable; // Signal to send data to Func units AND to free this RS
+   reg 	RS1_free_in;
+   reg        reset;          // reset signal 
+   reg        clock;          // the clock
+   reg [`PRN_BITS - 1:0] PRNum_in;
+   reg [`ROB_BITS - 1:0] ROBNum_in;
+   reg [4:0]	   FunctionCode_in;
+
+   wire 	   rs1_ready_out;     // This RS is in use and ready to go to EX 
+   wire [63:0] 	   rs1_opa_out;       // This RS' opa 
+   wire [63:0] 	   rs1_opb_out;       // This RS' opb 
+   // wire [4:0] 	   rs1_dest_tag_out;  // This RS' destination tag  
+   wire 		   rs1_avail_out;     // Is this RS is available to be issued to
+   wire [4:0] 	   FunctionCode;
+   wire [`PRN_BITS - 1:0] PRNum;
+   wire [`ROB_BITS - 1:0] ROBNum;
+   
+   rs1 rse1(.rs1_dest_in(rs1_dest_in),
+	   .rs1_opa_in(rs1_opa_in),
+	   .rs1_opa_valid(rs1_opa_valid),
+	   .rs1_opb_in(rs1_opb_in),
+	   .rs1_opb_valid(rs1_opb_valid),
+           .rs1_cdb_in(rs1_cdb_in),
+	   .rs1_cdb_tag(rs1_cdb_tag),
+	   .rs1_cdb_valid(rs1_cdb_valid),
+	   .rs1_load_in(rs1_load_in),
+	   .PRNum_in(PRNum_in),
+	   .ROBNum_in(ROBNum_in),
+	   .FunctionCode_in(FunctionCode_in),
+	   .RS1_free_in(RS1_free_in),
+
+	   .rs1_avail_out(rs1_avail_out), 
+           .rs1_ready_out(rs1_ready_out),
+	   .rs1_opa_out(rs1_opa_out),
+	   .rs1_opb_out(rs1_opb_out),
+	   .rs1_use_enable(rs1_use_enable),
+	   .FunctionCode(FunctionCode),
+	   .PRNum(PRNum),
+	   .ROBNum(ROBNum),
+           .reset(reset),
+	   .clock(clock));
+
+	always
+	begin
+	   #5;
+	   clock = ~clock;
+	end
+	always@(posedge clock) 
+	begin
+		if(rs1_ready_out)
+		begin
+			if(rs1_opa_in != rs1_opa_out) 
+			begin
+				$display("@@@ Failed:rs1_opa_in != rs1_opa_out");	
+				$finish;
+			end
+			if(rs1_opb_in != rs1_opb_out) 
+			begin	
+				$display("@@@ Failed");	
+				$finish;
+			end
+		end	
+	end
+	
+	initial begin
+	clock = 0;
+	reset = 0;
+	@(negedge clock);
+	reset = 1;
+	@(negedge clock);
+ 	reset = 0;
+	@(negedge clock);
+	   rs1_opa_in = 64'h2;
+	   rs1_opb_in = 64'h3;
+	   rs1_opa_valid = 1'b1;		
+	   rs1_opb_valid = 1'b1;
+	   rs1_use_enable = 1'b1;
+	   PRNum_in = `PRN_BITS'h3;
+	   ROBNum_in = `ROB_BITS'h2;
+	@(negedge clock);
+	   rs1_load_in = 1;
+	@(negedge clock);
+	@(negedge clock);	   
+	if(rs1_ready_out != 1)
+	  begin
+	     $display("opa_in:%h, opa:%h, opb:%h, PRN:%h, ROB:%h, rs1_ready:%b", rs1_opa_in, rs1_opa_out, rs1_opb_out, PRNum, ROBNum, rs1_ready_out);
+	     
+	     $display("@@@ Failed:rs1 not ready");
+	     $finish;
+	  end
+	@(negedge clock);
+
+	$display("@@@ Passed");	
+	$finish;
+
+	end	
+   
+endmodule
