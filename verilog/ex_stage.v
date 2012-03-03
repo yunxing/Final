@@ -215,4 +215,3 @@ module ex_stage(// Inputs
                           | (id_ex_cond_branch & brcond_result);
 
 endmodule // module ex_stage
-

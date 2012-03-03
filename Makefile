@@ -40,6 +40,7 @@ ASSEMBLER = vs-asm
 # SIMULATION CONFIG
 
 HEADERS     = $(wildcard *.vh)
+TEMPLATES   = $(wildcard template/*.v)
 TESTBENCH   = $(wildcard testbench/*.v)
 TESTBENCH  += $(wildcard testbench/*.c)
 PIPEFILES   = $(wildcard verilog/*.v)
@@ -79,7 +80,7 @@ sim:	simv $(ASSEMBLED)
 	./simv | tee sim_program.out
 
 simv:	$(HEADERS) $(SIMFILES) $(TESTBENCH)
-	$(VCS) $^ -o simv
+	python ./translate.py; $(VCS) $^ -o simv
 
 .PHONY: sim
 

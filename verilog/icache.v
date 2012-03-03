@@ -103,4 +103,3 @@ module icache(// inputs
   end
 
 endmodule
-

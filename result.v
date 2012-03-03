@@ -25,26 +25,6 @@ module rs1(rs1_dest_in,
 	   rs1_cdb3_tag,
 	   rs1_cdb3_valid,
 	   
-           rs1_cdb4_in,
-	   rs1_cdb4_tag,
-	   rs1_cdb4_valid,
-	   
-           rs1_cdb5_in,
-	   rs1_cdb5_tag,
-	   rs1_cdb5_valid,
-	   
-           rs1_cdb6_in,
-	   rs1_cdb6_tag,
-	   rs1_cdb6_valid,
-	   
-           rs1_cdb7_in,
-	   rs1_cdb7_tag,
-	   rs1_cdb7_valid,
-	   
-           rs1_cdb8_in,
-	   rs1_cdb8_tag,
-	   rs1_cdb8_valid,
-	   
 	   rs1_load_in,
 	   PRNum_in,
 	   ROBNum_in,
@@ -76,26 +56,6 @@ module rs1(rs1_dest_in,
    input [63:0] rs1_cdb3_in;     // CDB bus from functional units 
    input [4:0] 	rs1_cdb3_tag;    // CDB tag bus from functional units 
    input        rs1_cdb3_valid;  // The data on the CDB is valid
-      
-   input [63:0] rs1_cdb4_in;     // CDB bus from functional units 
-   input [4:0] 	rs1_cdb4_tag;    // CDB tag bus from functional units 
-   input        rs1_cdb4_valid;  // The data on the CDB is valid
-      
-   input [63:0] rs1_cdb5_in;     // CDB bus from functional units 
-   input [4:0] 	rs1_cdb5_tag;    // CDB tag bus from functional units 
-   input        rs1_cdb5_valid;  // The data on the CDB is valid
-      
-   input [63:0] rs1_cdb6_in;     // CDB bus from functional units 
-   input [4:0] 	rs1_cdb6_tag;    // CDB tag bus from functional units 
-   input        rs1_cdb6_valid;  // The data on the CDB is valid
-      
-   input [63:0] rs1_cdb7_in;     // CDB bus from functional units 
-   input [4:0] 	rs1_cdb7_tag;    // CDB tag bus from functional units 
-   input        rs1_cdb7_valid;  // The data on the CDB is valid
-      
-   input [63:0] rs1_cdb8_in;     // CDB bus from functional units 
-   input [4:0] 	rs1_cdb8_tag;    // CDB tag bus from functional units 
-   input        rs1_cdb8_valid;  // The data on the CDB is valid
    
      
    input [63:0] rs1_opa_in;     // Operand a from Rename  
@@ -145,21 +105,6 @@ module rs1(rs1_dest_in,
          
    wire 		    LoadAFromCDB3;  // signal to load from the CDB 
    wire 		    LoadBFromCDB3;  // signal to load from the CDB 
-         
-   wire 		    LoadAFromCDB4;  // signal to load from the CDB 
-   wire 		    LoadBFromCDB4;  // signal to load from the CDB 
-         
-   wire 		    LoadAFromCDB5;  // signal to load from the CDB 
-   wire 		    LoadBFromCDB5;  // signal to load from the CDB 
-         
-   wire 		    LoadAFromCDB6;  // signal to load from the CDB 
-   wire 		    LoadBFromCDB6;  // signal to load from the CDB 
-         
-   wire 		    LoadAFromCDB7;  // signal to load from the CDB 
-   wire 		    LoadBFromCDB7;  // signal to load from the CDB 
-         
-   wire 		    LoadAFromCDB8;  // signal to load from the CDB 
-   wire 		    LoadBFromCDB8;  // signal to load from the CDB 
       
    
    assign rs1_avail_out = ~InUse;
@@ -182,21 +127,6 @@ module rs1(rs1_dest_in,
    
    assign LoadAFromCDB3 = (rs1_cdb3_tag[4:0] == OPa) && !OPaValid && InUse && rs1_cdb3_valid; 
    assign LoadBFromCDB3 = (rs1_cdb3_tag[4:0] == OPb) && !OPbValid && InUse && rs1_cdb3_valid; 
-   
-   assign LoadAFromCDB4 = (rs1_cdb4_tag[4:0] == OPa) && !OPaValid && InUse && rs1_cdb4_valid; 
-   assign LoadBFromCDB4 = (rs1_cdb4_tag[4:0] == OPb) && !OPbValid && InUse && rs1_cdb4_valid; 
-   
-   assign LoadAFromCDB5 = (rs1_cdb5_tag[4:0] == OPa) && !OPaValid && InUse && rs1_cdb5_valid; 
-   assign LoadBFromCDB5 = (rs1_cdb5_tag[4:0] == OPb) && !OPbValid && InUse && rs1_cdb5_valid; 
-   
-   assign LoadAFromCDB6 = (rs1_cdb6_tag[4:0] == OPa) && !OPaValid && InUse && rs1_cdb6_valid; 
-   assign LoadBFromCDB6 = (rs1_cdb6_tag[4:0] == OPb) && !OPbValid && InUse && rs1_cdb6_valid; 
-   
-   assign LoadAFromCDB7 = (rs1_cdb7_tag[4:0] == OPa) && !OPaValid && InUse && rs1_cdb7_valid; 
-   assign LoadBFromCDB7 = (rs1_cdb7_tag[4:0] == OPb) && !OPbValid && InUse && rs1_cdb7_valid; 
-   
-   assign LoadAFromCDB8 = (rs1_cdb8_tag[4:0] == OPa) && !OPaValid && InUse && rs1_cdb8_valid; 
-   assign LoadBFromCDB8 = (rs1_cdb8_tag[4:0] == OPb) && !OPbValid && InUse && rs1_cdb8_valid; 
       
 
 
@@ -261,61 +191,6 @@ module rs1(rs1_dest_in,
 		  if (LoadBFromCDB3)
 		    begin
                        OPb <= `SD rs1_cdb3_in;
-                       OPbValid <= `SD 1'b1;
-		    end
-		  		  
-		  if (LoadAFromCDB4)
-		    begin
-                       OPa <= `SD rs1_cdb4_in;
-                       OPaValid <= `SD 1'b1;
-		    end
-		  if (LoadBFromCDB4)
-		    begin
-                       OPb <= `SD rs1_cdb4_in;
-                       OPbValid <= `SD 1'b1;
-		    end
-		  		  
-		  if (LoadAFromCDB5)
-		    begin
-                       OPa <= `SD rs1_cdb5_in;
-                       OPaValid <= `SD 1'b1;
-		    end
-		  if (LoadBFromCDB5)
-		    begin
-                       OPb <= `SD rs1_cdb5_in;
-                       OPbValid <= `SD 1'b1;
-		    end
-		  		  
-		  if (LoadAFromCDB6)
-		    begin
-                       OPa <= `SD rs1_cdb6_in;
-                       OPaValid <= `SD 1'b1;
-		    end
-		  if (LoadBFromCDB6)
-		    begin
-                       OPb <= `SD rs1_cdb6_in;
-                       OPbValid <= `SD 1'b1;
-		    end
-		  		  
-		  if (LoadAFromCDB7)
-		    begin
-                       OPa <= `SD rs1_cdb7_in;
-                       OPaValid <= `SD 1'b1;
-		    end
-		  if (LoadBFromCDB7)
-		    begin
-                       OPb <= `SD rs1_cdb7_in;
-                       OPbValid <= `SD 1'b1;
-		    end
-		  		  
-		  if (LoadAFromCDB8)
-		    begin
-                       OPa <= `SD rs1_cdb8_in;
-                       OPaValid <= `SD 1'b1;
-		    end
-		  if (LoadBFromCDB8)
-		    begin
-                       OPb <= `SD rs1_cdb8_in;
                        OPbValid <= `SD 1'b1;
 		    end
 		  

@@ -60,4 +60,3 @@ module wb_stage(// Inputs
   assign reg_wr_data_out = result_mux;
 
 endmodule // module wb_stage
-
